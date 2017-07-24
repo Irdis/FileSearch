@@ -93,8 +93,12 @@ namespace In.FileSearch.Extension.Tool
         {
             lock (_lock)
             {
-                _requestQueue.Clear();
+                foreach (var pending in _requests.Values)
+                {
+                    pending.Callback.Canceled();
+                }
                 _requests.Clear();
+                _requestQueue.Clear();
                 foreach (var running in _runningRequests.Values)
                 {
                     running.Cancel();
